@@ -1,0 +1,60 @@
+#Query1#
+#Sales Per Support Agent#
+
+
+SELECT Sum(Quantity * UnitPrice), E.FirstName ||''|| E.LastName As Fullname
+From Customer as C
+JOIN  Employee as E
+ON C.SupportRepID =  E.EmployeeID
+JOIN Invoice as INV
+ON INV.CustomerID = C. CustomerID
+JOIN InvoiceLine as INVL
+On INVL.InvoiceID = INV.InvoiceID
+Group By Fullname
+
+
+
+#Query2#
+
+#Total sales per each MediaType#
+
+Select Sum(INVL.Quantity) as Quant, MT.Name 
+From InvoiceLine as INVL
+Join Invoice as INV
+ON INVL.InvoiceID = INV.InvoiceId
+JOIN Track as T
+ON INVL.TrackId = T.TrackId 
+JOIN MediaType as MT
+ON T.MediaTypeID= MT.MediaTypeId
+Group by MT.name
+Order By Quant Desc
+
+#Query 3#
+#Top 10 selling genres of 2013#
+SELECT Sum(INV.Total) as Sales,G.name
+FROM Invoice as INV 
+JOIN InvoiceLine AS INVL
+ON INVL.InvoiceId = INV.InvoiceId
+Join Track as T
+On T.TrackId = INVL.TrackId
+join Genre as G 
+on T.GenreId= G.GenreId
+Where strftime('%Y', INV.InvoiceDate) = '2013'
+Group By  G.name
+Order by Sales desc
+Limit 10
+ 
+#Query 4#
+#Top 10 purchasing customers# 
+
+SELECT Sum(INVL.Quantity *INVL.UnitPrice) AS Sales, C.FirstName||''|| C.LastName AS Fullname
+From Customer as C
+JOIN Invoice as INV
+ON INV.CustomerID = C. CustomerID
+JOIN InvoiceLine as INVL
+On INVL.InvoiceID = INV.InvoiceID
+JOIN Track as T
+ON INVL.TrackId = T.TrackId
+Group by Fullname
+order by Sales Desc
+Limit 10
